@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"log"
 	"log/slog"
 	"net/http"
 	"os"
-	"path/filepath"
 )
 
 // Client represents an ntfy client
@@ -65,8 +63,6 @@ func Post(topic string, opts MessageOptions) error {
 // PostWithOptions sends a message with additional options
 func (c *Client) Post(topic string, opts MessageOptions) error {
 	url := fmt.Sprintf("%s/%s", c.BaseURL, topic)
-	log.Println(url)
-	log.Println(filepath.Join(c.BaseURL, topic))
 
 	req, err := http.NewRequest("POST", url, bytes.NewBufferString(opts.Message))
 	if err != nil {
