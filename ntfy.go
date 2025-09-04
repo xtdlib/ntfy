@@ -33,19 +33,6 @@ func New(baseURL string, httpClient *http.Client) *Client {
 	}
 }
 
-// MessageOptions contains options for sending a message
-type MessageOptions struct {
-	Message  string
-	Title    string
-	Priority int
-	Tags     []string
-	Click    string
-	Attach   string
-	Actions  string
-	Email    string
-	Icon     string
-}
-
 var DefaultClient = sync.OnceValue(
 	func() *Client {
 		baseURL := os.Getenv("NTFY_BASE_URL")
@@ -55,12 +42,12 @@ var DefaultClient = sync.OnceValue(
 		return New(baseURL, http.DefaultClient)
 	})
 
-func Post(topic string, opts MessageOptions) error {
+func Post(topic string, opts Message) error {
 	return DefaultClient().Post(topic, opts)
 }
 
 // PostWithOptions sends a message with additional options
-func (c *Client) Post(topic string, opts MessageOptions) error {
+func (c *Client) Post(topic string, opts Message) error {
 	url := fmt.Sprintf("%s/%s", c.BaseURL, topic)
 
 	req, err := http.NewRequest("POST", url, bytes.NewBufferString(opts.Message))
@@ -84,21 +71,6 @@ func (c *Client) Post(topic string, opts MessageOptions) error {
 			tags += tag
 		}
 		req.Header.Set("Tags", tags)
-	}
-	if opts.Click != "" {
-		req.Header.Set("Click", opts.Click)
-	}
-	if opts.Attach != "" {
-		req.Header.Set("Attach", opts.Attach)
-	}
-	if opts.Actions != "" {
-		req.Header.Set("Actions", opts.Actions)
-	}
-	if opts.Email != "" {
-		req.Header.Set("Email", opts.Email)
-	}
-	if opts.Icon != "" {
-		req.Header.Set("Icon", opts.Icon)
 	}
 
 	resp, err := c.HttpClient.Do(req)
