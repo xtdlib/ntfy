@@ -17,8 +17,8 @@ type Client struct {
 	client  *http.Client
 }
 
-// NewClient creates a new ntfy client
-func NewClient() *Client {
+// New creates a new ntfy client
+func New() *Client {
 	baseURL := os.Getenv("NTFY_BASE_URL")
 
 	if baseURL == "" {

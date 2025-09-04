@@ -7,7 +7,7 @@ import (
 )
 
 func TestClient(t *testing.T) {
-	client := ntfy.NewClient()
+	client := ntfy.New()
 
 	// Send a complex message with options
 	err := client.Post("system", ntfy.MessageOptions{
