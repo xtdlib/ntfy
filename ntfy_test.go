@@ -7,10 +7,8 @@ import (
 )
 
 func TestClient(t *testing.T) {
-	client := ntfy.New()
-
 	// Send a complex message with options
-	err := client.Post("system", ntfy.MessageOptions{
+	err := ntfy.Post("system", ntfy.MessageOptions{
 		Message: `There's someone at the door. 🐶
 
 Please check if it's a good boy or a hooman. 
