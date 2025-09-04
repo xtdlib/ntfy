@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"sync"
 )
 
 // Client represents an ntfy client
@@ -45,19 +46,17 @@ type MessageOptions struct {
 	Icon     string
 }
 
-var DefaultClient *Client
-
-func init() {
-	baseURL := os.Getenv("NTFY_BASE_URL")
-	if baseURL == "" {
-		baseURL = "https://ntfy.sh"
-	}
-
-	DefaultClient = New(baseURL, http.DefaultClient)
-}
+var DefaultClient = sync.OnceValue(
+	func() *Client {
+		baseURL := os.Getenv("NTFY_BASE_URL")
+		if baseURL == "" {
+			baseURL = "https://ntfy.sh"
+		}
+		return New(baseURL, http.DefaultClient)
+	})
 
 func Post(topic string, opts MessageOptions) error {
-	return DefaultClient.Post(topic, opts)
+	return DefaultClient().Post(topic, opts)
 }
 
 // PostWithOptions sends a message with additional options
